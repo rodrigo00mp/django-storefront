@@ -7,6 +7,7 @@ name = "pypi"
 django = "*"
 python-dotenv = "*"
 django-debug-toolbar = "*"
+pymysql = "*"
 
 [dev-packages]
 
