@@ -6,10 +6,25 @@ from django.urls import reverse
 # Register your models here.
 
 
+class InventoryFilter(admin.SimpleListFilter):
+    title = 'inventory'
+    parameter_name = 'inventory'
+
+    def lookups(self, request, model_admin):
+        return [
+            ('<10', 'Low')
+        ]
+
+    def queryset(self, request, queryset):
+        if self.value() == '<10':
+            return queryset.filter(inventory__lt=10)
+
+
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ['title', 'price', 'inventory_status', 'collections']
     list_per_page = 10
+    list_filter = ['collections', 'last_update', InventoryFilter]
 
     @admin.display(ordering='inventory')
     def inventory_status(self, product):
@@ -22,6 +37,7 @@ class ProductAdmin(admin.ModelAdmin):
 class CustomerAdmin(admin.ModelAdmin):
     list_display = ['first_name', 'last_name', 'membership', 'order_count']
     list_editable = ['membership']
+    search_fields = ['first_name__istartswith', 'last_name__istartswith']
     list_per_page = 10
 
     @admin.display(ordering='order_count')
