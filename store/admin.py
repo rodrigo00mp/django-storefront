@@ -25,12 +25,19 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ['title', 'price', 'inventory_status', 'collections']
     list_per_page = 10
     list_filter = ['collections', 'last_update', InventoryFilter]
+    actions = ['clear_inventory']
 
     @admin.display(ordering='inventory')
     def inventory_status(self, product):
         if product.inventory < 10:
             return 'Low'
         return 'Okay'
+
+    @admin.action(description='Clear inventory')
+    def clear_inventory(self, request, queryset):
+        updated_count = queryset.update(inventory=0)
+        self.message_user(
+            request, f'{updated_count} products were succesfully updated')
 
 
 @admin.register(models.Customer)
