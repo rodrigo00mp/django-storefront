@@ -8,17 +8,23 @@ from .serializer import ProductSerializer
 # Create your views here.
 
 
-@api_view()
+@api_view(['GET', 'POST'])
 def product_list(request):
-    queryset = Product.objects.select_related('collections').all()
-    serializer = ProductSerializer(
-        queryset, many=True, context={'request': request})
-    return Response(serializer.data)
+    if request.method == 'GET':
+        queryset = Product.objects.select_related('collections').all()
+        serializer = ProductSerializer(
+            queryset, many=True, context={'request': request})
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = ProductSerializer(data=request.data)
+        if serializer.is_valid():
+            return Response('Ok')
+        else:
+            return Response(serilaizer.errors, status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view()
 def product_detail(request, id):
-
     product = get_object_or_404(Product, pk=id)
     serializer = ProductSerializer(product)
     return Response(serializer.data)
