@@ -9,6 +9,7 @@ python-dotenv = "*"
 django-debug-toolbar = "*"
 pymysql = "*"
 djangorestframework = "*"
+drf-nested-routers = "*"
 
 [dev-packages]
 
