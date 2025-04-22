@@ -4,7 +4,6 @@ from . import models
 from django.db.models import Count
 from django.utils.html import format_html, urlencode
 from django.urls import reverse
-from tags.models import TaggedItem
 
 # Register your models here.
 
@@ -23,14 +22,8 @@ class InventoryFilter(admin.SimpleListFilter):
             return queryset.filter(inventory__lt=10)
 
 
-class TagInline(GenericTabularInline):
-    model = TaggedItem
-    autocomplete_fields = ['tag']
-
-
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
-    inlines = [TagInline]
     list_display = ['title', 'price', 'inventory_status', 'collections']
     list_per_page = 10
     list_filter = ['collections', 'last_update', InventoryFilter]
